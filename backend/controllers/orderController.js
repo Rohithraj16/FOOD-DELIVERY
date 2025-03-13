@@ -1,58 +1,28 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
-import Stripe from "stripe";
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+import Razorpay from "razorpay";
 
 //config variables
 const currency = "inr";
 const deliveryCharge = 50;
 const frontend_URL = "http://localhost:5173";
 
-// Placing User Order for Frontend using stripe
-const placeOrder = async (req, res) => {
+const placeOrderRazorPay = async (req, res) => {
 	try {
-		const newOrder = new orderModel({
-			userId: req.body.userId,
-			items: req.body.items,
-			amount: req.body.amount,
-			address: req.body.address,
+		const razorpay = new Razorpay({
+			key_id: process.env.RAZORPAY_KEY_ID,
+			key_secret: process.env.RAZORPAY_SECRET,
 		});
-		await newOrder.save();
-		await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
-
-		const line_items = req.body.items.map((item) => ({
-			price_data: {
-				currency: "inr",
-				product_data: {
-					name: item.name,
-				},
-				unit_amount: item.price * 100 * 80,
-			},
-			quantity: item.quantity,
-		}));
-
-		line_items.push({
-			price_data: {
-				currency: "inr",
-				product_data: {
-					name: "Delivery Charge",
-				},
-				unit_amount: 2 * 100 * 80,
-			},
-			quantity: 1,
-		});
-
-		const session = await stripe.checkout.sessions.create({
-			success_url: `${frontend_URL}/verify?success=true&orderId=${newOrder._id}`,
-			cancel_url: `${frontend_URL}/verify?success=false&orderId=${newOrder._id}`,
-			line_items: line_items,
-			mode: "payment",
-		});
-
-		res.json({ success: true, session_url: session.url });
-	} catch (error) {
-		console.log(error);
-		res.json({ success: false, message: "Error" });
+		const options = req.body;
+		const order = await razorpay.orders.create(options);
+		if (!order) {
+			return res.status(500).send("Error");
+		}
+		res.json(order);
+	} catch (err) {
+		console.error("Razorpay Order Error:", err);
+		res.status(500).json({ error: err.message });
 	}
 };
 
@@ -85,6 +55,25 @@ const listOrders = async (req, res) => {
 		console.log(error);
 		res.json({ success: false, message: "Error" });
 	}
+};
+
+const validateRes = async (req, res) => {
+	const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+		req.body;
+	const sha = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
+	sha.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+	const digest = sha.digest("hex");
+	if (digest !== razorpay_signature) {
+		return res.status(400).json({ msg: "Transaction is not legit" });
+	}
+	const responseData = {
+		msg: "success",
+		order_Id: razorpay_order_id,
+		payment_Id: razorpay_payment_id,
+	};
+	console.log("Sending response:", responseData);
+
+	res.json(responseData);
 };
 
 // User Orders for Frontend
@@ -126,10 +115,11 @@ const verifyOrder = async (req, res) => {
 };
 
 export {
-	placeOrder,
 	listOrders,
 	userOrders,
 	updateStatus,
 	verifyOrder,
 	placeOrderCod,
+	placeOrderRazorPay,
+	validateRes,
 };

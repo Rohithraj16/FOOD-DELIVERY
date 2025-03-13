@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar/Navbar.jsx";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home.jsx";
@@ -10,6 +10,12 @@ import Verify from "./pages/verify/Verify.jsx";
 import MyOrders from "./pages/MyOrders/MyOrders.jsx";
 const App = () => {
 	const [showLogin, setshowLogin] = useState(false);
+	useEffect(() => {
+		const script = document.createElement("script");
+		script.src = "https://checkout.razorpay.com/v1/checkout.js";
+		script.async = true;
+		document.body.appendChild(script);
+	}, []);
 	return (
 		<>
 			{showLogin ? <LoginPopUp setshowLogin={setshowLogin} /> : <></>}
@@ -20,7 +26,7 @@ const App = () => {
 					<Route path="/cart" element={<Cart />} />
 					<Route path="/order" element={<PlaceOrder />} />
 					<Route path="/verify" element={<Verify />} />
-					<Route path="/order" element={<PlaceOrder />} />
+
 					<Route path="/myorders" element={<MyOrders />} />
 				</Routes>
 			</div>

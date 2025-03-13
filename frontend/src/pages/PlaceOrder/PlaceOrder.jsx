@@ -7,7 +7,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const PlaceOrder = () => {
-	const [payment, setPayment] = useState("cod");
+	console.log("Payment handler running");
+
 	const [data, setData] = useState({
 		firstName: "",
 		lastName: "",
@@ -20,6 +21,10 @@ const PlaceOrder = () => {
 		phone: "",
 	});
 
+	const amount = 500;
+	const currency = "INR";
+	const receiptId = "receipt_no1";
+
 	const {
 		getTotalCartAmount,
 		token,
@@ -27,7 +32,7 @@ const PlaceOrder = () => {
 		cartItems,
 		url,
 		setCartItems,
-		currency,
+
 		deliveryCharge,
 	} = useContext(StoreContext);
 
@@ -39,56 +44,83 @@ const PlaceOrder = () => {
 		setData((data) => ({ ...data, [name]: value }));
 	};
 
-	const placeOrder = async (e) => {
-		e.preventDefault();
-		let orderItems = [];
-		food_list.map((item) => {
-			if (cartItems[item._id] > 0) {
-				let itemInfo = item;
-				itemInfo["quantity"] = cartItems[item._id];
-				orderItems.push(itemInfo);
-			}
+	const paymentHandler = async (e) => {
+		e.preventDefault(); // Prevent form submission
+		console.log("Playment handler running");
+		const response = await fetch("http://localhost:4000/api/order/order", {
+			method: "POST",
+			body: JSON.stringify({
+				amount,
+				currency,
+				receipt: receiptId,
+			}),
+			headers: {
+				"Content-Type": "application/json",
+			},
 		});
-		let orderData = {
-			address: data,
-			items: orderItems,
-			amount: getTotalCartAmount() + 2,
+		const order = await response.json();
+		console.log(order);
+		var options = {
+			key: "rzp_test_uxsR208o8YHnzk",
+			amount,
+			currency,
+			name: "Acme Corp",
+			description: "Test Transaction",
+			image: "https://example.com/your_logo",
+			order_id: order.id,
+			handler: async function (response) {
+				const body = {
+					...response,
+				};
+				const validateRes = await fetch(
+					"http://localhost:4000/api/order/validate",
+					{
+						method: "POST",
+						body: JSON.stringify(body),
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				const jsonRes = await validateRes.json();
+				console.log(jsonRes);
+			},
+			prefill: {
+				name: "Integrating the Razorpayin React",
+				email: "abcd@example.com",
+				contact: "9000900000",
+			},
+			notes: {
+				address: "Razorpay Corporate Office",
+			},
+			theme: {
+				color: "#3399cc",
+			},
 		};
-		if (payment === "stripe") {
-			let response = await axios.post(url + "/api/order/place", orderData, {
-				headers: { token },
-			});
-			if (response.data.success) {
-				const { session_url } = response.data;
-				window.location.replace(session_url);
-			} else {
-				toast.error("Something Went Wrong");
-			}
-		} else {
-			let response = await axios.post(url + "/api/order/placecod", orderData, {
-				headers: { token },
-			});
-			if (response.data.success) {
-				navigate("/myorders");
-				toast.success(response.data.message);
-				setCartItems({});
-			} else {
-				toast.error("Something Went Wrong");
-			}
-		}
+		var rzp1 = new Razorpay(options);
+		rzp1.on("payment.failed", function (response) {
+			alert(response.error.code);
+			alert(response.error.description);
+			alert(response.error.source);
+			alert(response.error.step);
+			alert(response.error.reason);
+			alert(response.error.metadata.order_id);
+			alert(response.error.metadata.payment_id);
+		});
+		rzp1.open();
+		e.preventDefault();
 	};
-
-	useEffect(() => {
-		if (!token) {
-			toast.error("to place an order sign in first");
-			navigate("/cart");
-		} else if (getTotalCartAmount() === 0) {
-			navigate("/cart");
-		}
-	}, [token]);
+	// useEffect(() => {
+	// 	if (!token) {
+	// 		toast.error("to place an order sign in first");
+	// 		navigate("/cart");
+	// 	} else if (getTotalCartAmount() === 0) {
+	// 		navigate("/cart");
+	// 	}
+	// }, [token]);
 
 	return (
-		<form onSubmit={placeOrder} className="place-order">
+		<form className="place-order" onSubmit={paymentHandler}>
 			<div className="place-order-left">
 				<p className="title">Delivery Information</p>
 				<div className="multi-field">
@@ -199,7 +231,7 @@ const PlaceOrder = () => {
 									: getTotalCartAmount() + deliveryCharge}
 							</b>
 						</div>
-						<button type="submit">Proceed To Payment</button>
+						<button type="submit">Proceed To Payment1</button>
 					</div>
 				</div>
 			</div>
