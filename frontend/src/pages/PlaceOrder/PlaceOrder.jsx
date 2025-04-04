@@ -22,7 +22,7 @@ const PlaceOrder = () => {
 	});
 
 	const amount = 500;
-	const currency = "INR";
+	const currency = "USD";
 	const receiptId = "receipt_no1";
 
 	const {
