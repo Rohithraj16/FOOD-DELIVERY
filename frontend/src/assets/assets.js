@@ -1,5 +1,5 @@
 import basket_icon from "./basket_icon.png";
-import logo from "./swiggy_logo.png";
+import logo from "./easy_eats_logo.png";
 import header_img from "./New_hero_img.jpg";
 import search_icon from "./search_icon.png";
 import menu_1 from "./menu_1.png";
