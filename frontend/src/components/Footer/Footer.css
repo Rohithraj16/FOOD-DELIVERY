@@ -8,6 +8,10 @@
 	padding: 20px 8vw;
 	padding-top: 80px;
 }
+.footer-logo {
+	width: 120px; /* Or whatever size you prefer */
+	height: auto;
+}
 .footer-content {
 	width: 100%;
 	display: grid;
