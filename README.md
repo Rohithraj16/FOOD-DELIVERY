@@ -1,5 +1,6 @@
 # FOOD-DELIVERY
-FILE-STRUCTURE OF THIS PROJECT
+THIS IS THE FILE STRUCTURE OF THE PROJECT
+```plaintext
 FOOD-DELIVERY/
 ├── README.md
 ├── admin/
@@ -15,20 +16,20 @@ FOOD-DELIVERY/
 │   │   │   │   ├── Navbar.css
 │   │   │   │   ├── Navbar.jsx
 │   │   │   ├── sidebar/
-│   │   │       ├── Sidebar.css
-│   │   │       ├── Sidebar.jsx
+│   │   │   │   ├── Sidebar.css
+│   │   │   │   ├── Sidebar.jsx
 │   │   ├── index.css
 │   │   ├── main.jsx
 │   │   ├── pages/
-│   │       ├── Add/
-│   │       │   ├── Add.css
-│   │       │   ├── Add.jsx
-│   │       ├── List/
-│   │       │   ├── List.css
-│   │       │   ├── List.jsx
-│   │       ├── Orders/
-│   │           ├── Orders.css
-│   │           ├── Orders.jsx
+│   │   │   ├── Add/
+│   │   │   │   ├── Add.css
+│   │   │   │   ├── Add.jsx
+│   │   │   ├── List/
+│   │   │   │   ├── List.css
+│   │   │   │   ├── List.jsx
+│   │   │   ├── Orders/
+│   │   │   │   ├── Orders.css
+│   │   │   │   ├── Orders.jsx
 │   ├── vite.config.js
 ├── backend/
 │   ├── .env
@@ -64,7 +65,7 @@ FOOD-DELIVERY/
 │   ├── src/
 │   │   ├── App.jsx
 │   │   ├── components/
-│   │   │   ├── AppDowload/
+│   │   │   ├── AppDownload/
 │   │   │   │   ├── AppDownload.css
 │   │   │   │   ├── AppDownload.jsx
 │   │   │   ├── ExploreMenu/
@@ -86,26 +87,26 @@ FOOD-DELIVERY/
 │   │   │   │   ├── LoginPopUp.css
 │   │   │   │   ├── LoginPopUp.jsx
 │   │   │   ├── Navbar/
-│   │   │       ├── Navbar.css
-│   │   │       ├── Navbar.jsx
+│   │   │   │   ├── Navbar.css
+│   │   │   │   ├── Navbar.jsx
 │   │   ├── context/
 │   │   │   ├── StoreContext.jsx
 │   │   ├── index.css
 │   │   ├── main.jsx
 │   │   ├── pages/
-│   │       ├── Cart/
-│   │       │   ├── Cart.css
-│   │       │   ├── Cart.jsx
-│   │       ├── Home/
-│   │       │   ├── Home.css
-│   │       │   ├── Home.jsx
-│   │       ├── MyOrders/
-│   │       │   ├── MyOrders.css
-│   │       │   ├── MyOrders.jsx
-│   │       ├── PlaceOrder/
-│   │       │   ├── PlaceOrder.css
-│   │       │   ├── PlaceOrder.jsx
-│   │       ├── verify/
-│   │           ├── Verify.css
-│   │           ├── Verify.jsx
+│   │   │   ├── Cart/
+│   │   │   │   ├── Cart.css
+│   │   │   │   ├── Cart.jsx
+│   │   │   ├── Home/
+│   │   │   │   ├── Home.css
+│   │   │   │   ├── Home.jsx
+│   │   │   ├── MyOrders/
+│   │   │   │   ├── MyOrders.css
+│   │   │   │   ├── MyOrders.jsx
+│   │   │   ├── PlaceOrder/
+│   │   │   │   ├── PlaceOrder.css
+│   │   │   │   ├── PlaceOrder.jsx
+│   │   │   ├── verify/
+│   │   │   │   ├── Verify.css
+│   │   │   │   ├── Verify.jsx
 │   ├── vite.config.js
