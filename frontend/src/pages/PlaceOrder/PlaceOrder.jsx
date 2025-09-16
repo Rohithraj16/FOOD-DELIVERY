@@ -47,17 +47,20 @@ const PlaceOrder = () => {
 	const paymentHandler = async (e) => {
 		e.preventDefault(); // Prevent form submission
 		console.log("Playment handler running");
-		const response = await fetch("http://localhost:4000/api/order/order", {
-			method: "POST",
-			body: JSON.stringify({
-				amount,
-				currency,
-				receipt: receiptId,
-			}),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
+		const response = await fetch(
+			"https://food-delivery-p404.onrender.com/api/order/order",
+			{
+				method: "POST",
+				body: JSON.stringify({
+					amount,
+					currency,
+					receipt: receiptId,
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
 		const order = await response.json();
 		console.log(order);
 		var options = {
@@ -73,7 +76,7 @@ const PlaceOrder = () => {
 					...response,
 				};
 				const validateRes = await fetch(
-					"http://localhost:4000/api/order/validate",
+					"https://food-delivery-p404.onrender.com/api/order/validate",
 					{
 						method: "POST",
 						body: JSON.stringify(body),
